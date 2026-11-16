@@ -12,7 +12,7 @@
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  <link rel="stylesheet" href="styles.css?v=15" />
+  <link rel="stylesheet" href="styles.css?v=16" />
 </head>
 <body>
   <!-- 慶祝彩帶畫布 -->
@@ -48,38 +48,6 @@
         </button>
       </div>
     </header>
-
-    <!-- 任務標籤選擇列 -->
-    <section class="task-section" aria-label="選擇當前任務">
-      <div class="task-list" id="task-list">
-        <!-- 由 JavaScript 動態渲染任務按鈕 -->
-      </div>
-    </section>
-
-    <!-- 時鐘模式切換列（經典藍色 12 分鐘、紅色 60 分鐘、自訂模式） -->
-    <section class="mode-switcher" role="tablist" aria-label="時鐘模式選擇">
-      <button class="mode-tab active" data-mode="fast12" role="tab" aria-selected="true">
-        <span class="mode-dot dot-blue"></span>
-        <div class="mode-info">
-          <span class="mode-name" id="mode-name-fast12">藍色快鐘</span>
-          <span class="mode-desc" id="mode-desc-fast12">最高 15 分鐘</span>
-        </div>
-      </button>
-      <button class="mode-tab" data-mode="slow60" role="tab" aria-selected="false">
-        <span class="mode-dot dot-red"></span>
-        <div class="mode-info">
-          <span class="mode-name" id="mode-name-slow60">紅色慢鐘</span>
-          <span class="mode-desc" id="mode-desc-slow60">最高 60 分鐘</span>
-        </div>
-      </button>
-      <button class="mode-tab" data-mode="custom" role="tab" aria-selected="false">
-        <span class="mode-dot dot-custom" id="custom-mode-dot"></span>
-        <div class="mode-info">
-          <span class="mode-name" id="mode-name-custom">自訂轉盤</span>
-          <span class="mode-desc" id="custom-mode-desc">最高 30 分鐘</span>
-        </div>
-      </button>
-    </section>
 
     <!-- 主要計時轉盤區 -->
     <main class="clock-stage">
@@ -163,6 +131,38 @@
         </button>
       </div>
     </main>
+
+    <!-- 時鐘模式切換列（經典藍色 15 分鐘、紅色 60 分鐘、自訂模式） -->
+    <section class="mode-switcher" role="tablist" aria-label="時鐘模式選擇">
+      <button class="mode-tab active" data-mode="fast12" role="tab" aria-selected="true">
+        <span class="mode-dot dot-blue"></span>
+        <div class="mode-info">
+          <span class="mode-name" id="mode-name-fast12">藍色快鐘</span>
+          <span class="mode-desc" id="mode-desc-fast12">最高 15 分鐘</span>
+        </div>
+      </button>
+      <button class="mode-tab" data-mode="slow60" role="tab" aria-selected="false">
+        <span class="mode-dot dot-red"></span>
+        <div class="mode-info">
+          <span class="mode-name" id="mode-name-slow60">紅色慢鐘</span>
+          <span class="mode-desc" id="mode-desc-slow60">最高 60 分鐘</span>
+        </div>
+      </button>
+      <button class="mode-tab" data-mode="custom" role="tab" aria-selected="false">
+        <span class="mode-dot dot-custom" id="custom-mode-dot"></span>
+        <div class="mode-info">
+          <span class="mode-name" id="mode-name-custom">自訂轉盤</span>
+          <span class="mode-desc" id="custom-mode-desc">最高 30 分鐘</span>
+        </div>
+      </button>
+    </section>
+
+    <!-- 任務標籤選擇列 -->
+    <section class="task-section" aria-label="選擇當前任務">
+      <div class="task-list" id="task-list">
+        <!-- 由 JavaScript 動態渲染任務按鈕 -->
+      </div>
+    </section>
   </div>
 
   <!-- 設定與自訂彈窗 (Modal) -->
@@ -304,6 +304,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=16"></script>
 </body>
 </html>
