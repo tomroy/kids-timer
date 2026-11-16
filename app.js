@@ -319,6 +319,7 @@
     clockWrapper: document.getElementById('clock-wrapper'),
     timerSvg: document.getElementById('timer-svg'),
     clockTrackBg: document.getElementById('clock-track-bg'),
+    timerTotalSector: document.getElementById('timer-total-sector'),
     timerSector: document.getElementById('timer-sector'),
     clockTicks: document.getElementById('clock-ticks'),
     clockNumbers: document.getElementById('clock-numbers'),
@@ -428,6 +429,7 @@
     root.style.setProperty('--bg-gradient-end', theme.bgEnd);
 
     dom.metaThemeColor.setAttribute('content', theme.primary);
+    dom.timerTotalSector.setAttribute('fill', theme.primary);
     dom.timerSector.setAttribute('fill', theme.primary);
     dom.clockTrackBg.setAttribute('fill', theme.soft);
     dom.timerHandle.setAttribute('stroke', theme.primary);
@@ -522,42 +524,48 @@
     }
   }
 
-  // 更新扇形色塊、指針與數位時間顯示
-  function updateClockVisuals() {
-    const maxSeconds = state.maxMinutes * 60;
-    const clampedRemaining = Math.max(0, Math.min(state.remainingSeconds, maxSeconds));
-    const ratio = maxSeconds > 0 ? clampedRemaining / maxSeconds : 0;
-    const angle = ratio * 360;
-
-    // 繪製 SVG 扇形路徑
+  // 根據角度產生 SVG 扇形路徑
+  function buildSectorPath(angle) {
     if (angle <= 0.05) {
-      dom.timerSector.setAttribute('d', '');
-    } else if (angle >= 359.9) {
+      return '';
+    }
+    if (angle >= 359.9) {
       // 滿圈時使用兩個半圓繪製完整圓形
       const r = SECTOR_RADIUS;
       const c = CLOCK_CENTER;
-      const fullCirclePath = [
+      return [
         `M ${c} ${c - r}`,
         `A ${r} ${r} 0 1 1 ${c} ${c + r}`,
         `A ${r} ${r} 0 1 1 ${c} ${c - r}`,
         'Z'
       ].join(' ');
-      dom.timerSector.setAttribute('d', fullCirclePath);
-    } else {
-      const startPt = polarToCartesian(CLOCK_CENTER, CLOCK_CENTER, SECTOR_RADIUS, 0);
-      const endPt = polarToCartesian(CLOCK_CENTER, CLOCK_CENTER, SECTOR_RADIUS, angle);
-      const largeArcFlag = angle > 180 ? 1 : 0;
-      const d = [
-        `M ${CLOCK_CENTER} ${CLOCK_CENTER}`,
-        `L ${startPt.x.toFixed(2)} ${startPt.y.toFixed(2)}`,
-        `A ${SECTOR_RADIUS} ${SECTOR_RADIUS} 0 ${largeArcFlag} 1 ${endPt.x.toFixed(2)} ${endPt.y.toFixed(2)}`,
-        'Z'
-      ].join(' ');
-      dom.timerSector.setAttribute('d', d);
     }
+    const startPt = polarToCartesian(CLOCK_CENTER, CLOCK_CENTER, SECTOR_RADIUS, 0);
+    const endPt = polarToCartesian(CLOCK_CENTER, CLOCK_CENTER, SECTOR_RADIUS, angle);
+    const largeArcFlag = angle > 180 ? 1 : 0;
+    return [
+      `M ${CLOCK_CENTER} ${CLOCK_CENTER}`,
+      `L ${startPt.x.toFixed(2)} ${startPt.y.toFixed(2)}`,
+      `A ${SECTOR_RADIUS} ${SECTOR_RADIUS} 0 ${largeArcFlag} 1 ${endPt.x.toFixed(2)} ${endPt.y.toFixed(2)}`,
+      'Z'
+    ].join(' ');
+  }
+
+  // 更新扇形色塊、指針與數位時間顯示
+  function updateClockVisuals() {
+    const maxSeconds = state.maxMinutes * 60;
+    const clampedRemaining = Math.max(0, Math.min(state.remainingSeconds, maxSeconds));
+    const clampedTotal = Math.max(clampedRemaining, Math.min(state.totalSeconds, maxSeconds));
+
+    const remainingAngle = maxSeconds > 0 ? (clampedRemaining / maxSeconds) * 360 : 0;
+    const totalAngle = maxSeconds > 0 ? (clampedTotal / maxSeconds) * 360 : 0;
+
+    // 繪製原本設定的總時間底色扇形與目前剩餘時間扇形
+    dom.timerTotalSector.setAttribute('d', buildSectorPath(totalAngle));
+    dom.timerSector.setAttribute('d', buildSectorPath(remainingAngle));
 
     // 更新指針與握把位置
-    const handlePt = polarToCartesian(CLOCK_CENTER, CLOCK_CENTER, SECTOR_RADIUS, angle);
+    const handlePt = polarToCartesian(CLOCK_CENTER, CLOCK_CENTER, SECTOR_RADIUS, remainingAngle);
     dom.timerHandLine.setAttribute('x2', handlePt.x.toFixed(2));
     dom.timerHandLine.setAttribute('y2', handlePt.y.toFixed(2));
     dom.timerHandle.setAttribute('cx', handlePt.x.toFixed(2));
