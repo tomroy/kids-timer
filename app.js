@@ -869,80 +869,22 @@
       // 防止手機長按跳出系統右鍵選單
       btn.addEventListener('contextmenu', (e) => e.preventDefault());
 
-      // 長按拖曳改變任務順序
+      // 長按拖曳改變任務順序（分別處理觸控與滑鼠，確保手機瀏覽器不搶走拖曳手勢）
       let longPressTimer = null;
       let isReordering = false;
       let suppressNextClick = false;
+      let lastTouchTime = 0;
       let startX = 0;
       let startY = 0;
 
-      const cleanupDragState = (e) => {
-        if (longPressTimer) {
-          clearTimeout(longPressTimer);
-          longPressTimer = null;
-        }
-        if (isReordering) {
-          isReordering = false;
-          suppressNextClick = true;
-          btn.classList.remove('reordering');
-          dom.taskList.classList.remove('reorder-active');
-          if (e && e.pointerId !== undefined) {
-            try {
-              btn.releasePointerCapture(e.pointerId);
-            } catch (_) {}
-          }
-          saveSettings();
-        }
-      };
-
-      btn.addEventListener('pointerdown', (e) => {
-        if (state.childLocked) return;
-        if (e.target.getAttribute('data-delete-id')) return;
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-
-        startX = e.clientX;
-        startY = e.clientY;
-        suppressNextClick = false;
-
-        longPressTimer = setTimeout(() => {
-          longPressTimer = null;
-          isReordering = true;
-          btn.classList.add('reordering');
-          dom.taskList.classList.add('reorder-active');
-          if (navigator.vibrate) {
-            try { navigator.vibrate(30); } catch (_) {}
-          }
-          sound.playStepClick();
-          try {
-            btn.setPointerCapture(e.pointerId);
-          } catch (_) {}
-        }, 400);
-      });
-
-      btn.addEventListener('pointermove', (e) => {
-        if (!isReordering) {
-          if (longPressTimer) {
-            const dx = Math.abs(e.clientX - startX);
-            const dy = Math.abs(e.clientY - startY);
-            if (dx > 8 || dy > 8) {
-              clearTimeout(longPressTimer);
-              longPressTimer = null;
-            }
-          }
-          return;
-        }
-
-        e.preventDefault();
-
-        // 若拖曳到任務列左右邊緣，自動微調水平捲動位置
+      const performSwapAtX = (clientX) => {
         const listRect = dom.taskList.getBoundingClientRect();
-        if (e.clientX < listRect.left + 36) {
-          dom.taskList.scrollLeft -= 8;
-        } else if (e.clientX > listRect.right - 36) {
-          dom.taskList.scrollLeft += 8;
+        if (clientX < listRect.left + 38) {
+          dom.taskList.scrollLeft -= 10;
+        } else if (clientX > listRect.right - 38) {
+          dom.taskList.scrollLeft += 10;
         }
 
-        // 比對其他任務按鈕的中心點，即時交換位置
         const allChips = Array.from(dom.taskList.querySelectorAll('.task-chip[data-task-id]'));
         const currentIdx = state.tasks.findIndex((t) => t.id === task.id);
         if (currentIdx === -1) return;
@@ -953,24 +895,127 @@
           const rect = targetChip.getBoundingClientRect();
           const center = rect.left + rect.width / 2;
 
-          if (i < currentIdx && e.clientX < center) {
+          if (i < currentIdx && clientX < center) {
             const [moved] = state.tasks.splice(currentIdx, 1);
             state.tasks.splice(i, 0, moved);
-            dom.taskList.insertBefore(btn, targetChip);
+            // 移動其他項目而非 btn 本身，避免手機中斷觸控事件追蹤
+            for (let k = i; k < currentIdx; k++) {
+              dom.taskList.insertBefore(allChips[k], btn.nextSibling);
+            }
             sound.playStepClick();
             break;
-          } else if (i > currentIdx && e.clientX > center) {
+          } else if (i > currentIdx && clientX > center) {
             const [moved] = state.tasks.splice(currentIdx, 1);
             state.tasks.splice(i, 0, moved);
-            dom.taskList.insertBefore(btn, targetChip.nextSibling);
+            for (let k = currentIdx + 1; k <= i; k++) {
+              dom.taskList.insertBefore(allChips[k], btn);
+            }
             sound.playStepClick();
             break;
           }
         }
-      });
+      };
 
-      btn.addEventListener('pointerup', cleanupDragState);
-      btn.addEventListener('pointercancel', cleanupDragState);
+      const startLongPress = (clientX, clientY) => {
+        startX = clientX;
+        startY = clientY;
+        suppressNextClick = false;
+
+        if (longPressTimer) clearTimeout(longPressTimer);
+        longPressTimer = setTimeout(() => {
+          longPressTimer = null;
+          isReordering = true;
+          btn.classList.add('reordering');
+          dom.taskList.classList.add('reorder-active');
+          if (navigator.vibrate) {
+            try { navigator.vibrate(40); } catch (_) {}
+          }
+          sound.playStepClick();
+        }, 350);
+      };
+
+      const checkScrollCancel = (clientX, clientY) => {
+        if (!longPressTimer) return;
+        const dx = Math.abs(clientX - startX);
+        const dy = Math.abs(clientY - startY);
+        if (dx > 14 || dy > 14) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+      };
+
+      const finishReorder = () => {
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+        if (isReordering) {
+          isReordering = false;
+          suppressNextClick = true;
+          btn.classList.remove('reordering');
+          dom.taskList.classList.remove('reorder-active');
+          saveSettings();
+        }
+      };
+
+      // 手機觸控事件（passive: false 才能在進入拖曳模式時鎖住水平捲動）
+      const onTouchMove = (e) => {
+        if (e.touches.length !== 1) return;
+        const touch = e.touches[0];
+        if (!isReordering) {
+          checkScrollCancel(touch.clientX, touch.clientY);
+          return;
+        }
+        e.preventDefault();
+        performSwapAtX(touch.clientX);
+      };
+
+      const onTouchEnd = () => {
+        window.removeEventListener('touchmove', onTouchMove, { passive: false });
+        window.removeEventListener('touchend', onTouchEnd);
+        window.removeEventListener('touchcancel', onTouchEnd);
+        finishReorder();
+      };
+
+      btn.addEventListener('touchstart', (e) => {
+        if (state.childLocked) return;
+        if (e.touches.length !== 1) return;
+        if (e.target.getAttribute('data-delete-id')) return;
+
+        lastTouchTime = Date.now();
+        const touch = e.touches[0];
+        startLongPress(touch.clientX, touch.clientY);
+        window.addEventListener('touchmove', onTouchMove, { passive: false });
+        window.addEventListener('touchend', onTouchEnd);
+        window.addEventListener('touchcancel', onTouchEnd);
+      }, { passive: true });
+
+      // 桌面滑鼠事件
+      const onMouseMove = (e) => {
+        if (!isReordering) {
+          checkScrollCancel(e.clientX, e.clientY);
+          return;
+        }
+        e.preventDefault();
+        performSwapAtX(e.clientX);
+      };
+
+      const onMouseUp = () => {
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+        finishReorder();
+      };
+
+      btn.addEventListener('mousedown', (e) => {
+        if (Date.now() - lastTouchTime < 800) return;
+        if (state.childLocked) return;
+        if (e.button !== 0) return;
+        if (e.target.getAttribute('data-delete-id')) return;
+
+        startLongPress(e.clientX, e.clientY);
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+      });
 
       btn.addEventListener('click', (e) => {
         if (suppressNextClick) {
