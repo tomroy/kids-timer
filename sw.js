@@ -1,10 +1,10 @@
-// Service Worker：Network-First 優先取得最新設定，離線時自動回退至快取（相容 GitHub Pages 子路徑）
-const CACHE_NAME = 'kids-timer-v10';
+// Service Worker：Network-First (bypass HTTP cache) 優先取得最新設定，離線時自動回退至快取
+const CACHE_NAME = 'kids-timer-v11';
 const ASSETS = [
   './',
   './index.html',
-  './styles.css',
-  './app.js',
+  './styles.css?v=11',
+  './app.js?v=11',
   './manifest.json',
   './icon.svg',
   './icon-192.png',
@@ -30,7 +30,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: 'no-cache' })
       .then((networkResponse) => {
         const clone = networkResponse.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
