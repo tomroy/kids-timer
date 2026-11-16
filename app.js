@@ -79,6 +79,7 @@
 
   // 預設兒童日常任務清單
   const DEFAULT_TASKS = [
+    { id: 'go_out', emoji: '🚀', name: '出門', defaultMin: 15, mode: 'fast12' },
     { id: 'toys', emoji: '🧸', name: '收玩具時間', defaultMin: 5, mode: 'fast12' },
     { id: 'brush', emoji: '🪥', name: '刷牙洗臉', defaultMin: 3, mode: 'fast12' },
     { id: 'read', emoji: '📚', name: '看書閱讀', defaultMin: 15, mode: 'fast12' },
@@ -101,8 +102,8 @@
   const state = {
     mode: 'fast12',            // 'fast12' (藍色快鐘 15分) | 'slow60' | 'custom'
     maxMinutes: 15,            // 當前轉盤一圈代表的最大分鐘數
-    totalSeconds: 5 * 60,      // 設定的總秒數
-    remainingSeconds: 5 * 60,  // 目前剩餘秒數（支援小數點以呈現平滑動畫）
+    totalSeconds: 15 * 60,     // 設定的總秒數
+    remainingSeconds: 15 * 60, // 目前剩餘秒數（支援小數點以呈現平滑動畫）
     isRunning: false,
     isDragging: false,
     lastDragAngle: null,
@@ -121,7 +122,7 @@
 
     // 任務清單與當前選中任務
     tasks: [...DEFAULT_TASKS],
-    activeTaskId: 'toys',
+    activeTaskId: 'go_out',
     selectedNewEmoji: '🎹'
   };
 
@@ -137,8 +138,29 @@
       if (typeof saved.showDigital === 'boolean') state.showDigital = saved.showDigital;
       if (typeof saved.lastMinutePulse === 'boolean') state.lastMinutePulse = saved.lastMinutePulse;
       if (typeof saved.tickSoundEnabled === 'boolean') state.tickSoundEnabled = saved.tickSoundEnabled;
-      if (Array.isArray(saved.customTasks)) {
-        state.tasks = [...DEFAULT_TASKS, ...saved.customTasks];
+
+      const customTasks = Array.isArray(saved.customTasks) ? saved.customTasks : [];
+      const pool = [...DEFAULT_TASKS, ...customTasks];
+
+      if (Array.isArray(saved.taskOrder) && saved.taskOrder.length > 0) {
+        const poolMap = new Map(pool.map((t) => [t.id, t]));
+        const ordered = [];
+        // 若有新增的預設任務尚未出現在舊的排序中，先放到最前面
+        DEFAULT_TASKS.forEach((dt) => {
+          if (!saved.taskOrder.includes(dt.id)) {
+            ordered.push(dt);
+          }
+        });
+        saved.taskOrder.forEach((id) => {
+          if (poolMap.has(id)) {
+            ordered.push(poolMap.get(id));
+            poolMap.delete(id);
+          }
+        });
+        poolMap.forEach((t) => ordered.push(t));
+        state.tasks = ordered;
+      } else {
+        state.tasks = pool;
       }
     } catch (err) {
       console.warn('無法讀取儲存的設定：', err);
@@ -148,6 +170,7 @@
   function saveSettings() {
     try {
       const customTasks = state.tasks.filter((t) => t.isCustom);
+      const taskOrder = state.tasks.map((t) => t.id);
       localStorage.setItem(
         'kids_timer_settings_v1',
         JSON.stringify({
@@ -157,7 +180,8 @@
           showDigital: state.showDigital,
           lastMinutePulse: state.lastMinutePulse,
           tickSoundEnabled: state.tickSoundEnabled,
-          customTasks
+          customTasks,
+          taskOrder
         })
       );
     } catch (err) {
@@ -834,6 +858,7 @@
     state.tasks.forEach((task) => {
       const btn = document.createElement('button');
       btn.type = 'button';
+      btn.dataset.taskId = task.id;
       btn.className = `task-chip ${task.id === state.activeTaskId ? 'active' : ''}`;
       btn.innerHTML = `
         <span class="task-emoji">${task.emoji}</span>
@@ -841,7 +866,119 @@
         ${task.isCustom ? `<span class="delete-task" data-delete-id="${task.id}" title="刪除此任務">✕</span>` : ''}
       `;
 
+      // 防止手機長按跳出系統右鍵選單
+      btn.addEventListener('contextmenu', (e) => e.preventDefault());
+
+      // 長按拖曳改變任務順序
+      let longPressTimer = null;
+      let isReordering = false;
+      let suppressNextClick = false;
+      let startX = 0;
+      let startY = 0;
+
+      const cleanupDragState = (e) => {
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+        if (isReordering) {
+          isReordering = false;
+          suppressNextClick = true;
+          btn.classList.remove('reordering');
+          dom.taskList.classList.remove('reorder-active');
+          if (e && e.pointerId !== undefined) {
+            try {
+              btn.releasePointerCapture(e.pointerId);
+            } catch (_) {}
+          }
+          saveSettings();
+        }
+      };
+
+      btn.addEventListener('pointerdown', (e) => {
+        if (state.childLocked) return;
+        if (e.target.getAttribute('data-delete-id')) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+        startX = e.clientX;
+        startY = e.clientY;
+        suppressNextClick = false;
+
+        longPressTimer = setTimeout(() => {
+          longPressTimer = null;
+          isReordering = true;
+          btn.classList.add('reordering');
+          dom.taskList.classList.add('reorder-active');
+          if (navigator.vibrate) {
+            try { navigator.vibrate(30); } catch (_) {}
+          }
+          sound.playStepClick();
+          try {
+            btn.setPointerCapture(e.pointerId);
+          } catch (_) {}
+        }, 400);
+      });
+
+      btn.addEventListener('pointermove', (e) => {
+        if (!isReordering) {
+          if (longPressTimer) {
+            const dx = Math.abs(e.clientX - startX);
+            const dy = Math.abs(e.clientY - startY);
+            if (dx > 8 || dy > 8) {
+              clearTimeout(longPressTimer);
+              longPressTimer = null;
+            }
+          }
+          return;
+        }
+
+        e.preventDefault();
+
+        // 若拖曳到任務列左右邊緣，自動微調水平捲動位置
+        const listRect = dom.taskList.getBoundingClientRect();
+        if (e.clientX < listRect.left + 36) {
+          dom.taskList.scrollLeft -= 8;
+        } else if (e.clientX > listRect.right - 36) {
+          dom.taskList.scrollLeft += 8;
+        }
+
+        // 比對其他任務按鈕的中心點，即時交換位置
+        const allChips = Array.from(dom.taskList.querySelectorAll('.task-chip[data-task-id]'));
+        const currentIdx = state.tasks.findIndex((t) => t.id === task.id);
+        if (currentIdx === -1) return;
+
+        for (let i = 0; i < allChips.length; i++) {
+          const targetChip = allChips[i];
+          if (targetChip === btn) continue;
+          const rect = targetChip.getBoundingClientRect();
+          const center = rect.left + rect.width / 2;
+
+          if (i < currentIdx && e.clientX < center) {
+            const [moved] = state.tasks.splice(currentIdx, 1);
+            state.tasks.splice(i, 0, moved);
+            dom.taskList.insertBefore(btn, targetChip);
+            sound.playStepClick();
+            break;
+          } else if (i > currentIdx && e.clientX > center) {
+            const [moved] = state.tasks.splice(currentIdx, 1);
+            state.tasks.splice(i, 0, moved);
+            dom.taskList.insertBefore(btn, targetChip.nextSibling);
+            sound.playStepClick();
+            break;
+          }
+        }
+      });
+
+      btn.addEventListener('pointerup', cleanupDragState);
+      btn.addEventListener('pointercancel', cleanupDragState);
+
       btn.addEventListener('click', (e) => {
+        if (suppressNextClick) {
+          suppressNextClick = false;
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         if (state.childLocked) {
           showLockedToast();
           return;
@@ -1211,6 +1348,27 @@
 
   function initApp() {
     loadSavedSettings();
+    if (state.tasks.length > 0) {
+      const firstTask = state.tasks[0];
+      state.activeTaskId = firstTask.id;
+      dom.activeTaskEmoji.textContent = firstTask.emoji;
+      dom.activeTaskName.textContent = firstTask.name;
+      dom.clockCenterEmoji.textContent = firstTask.emoji;
+      state.totalSeconds = firstTask.defaultMin * 60;
+      state.remainingSeconds = state.totalSeconds;
+      if (firstTask.defaultMin <= 15) {
+        state.mode = 'fast12';
+        state.maxMinutes = 15;
+      } else if (firstTask.defaultMin <= 60) {
+        state.mode = 'slow60';
+        state.maxMinutes = 60;
+      }
+      dom.modeTabs.forEach((tab) => {
+        const isMatch = tab.dataset.mode === state.mode;
+        tab.classList.toggle('active', isMatch);
+        tab.setAttribute('aria-selected', String(isMatch));
+      });
+    }
     renderTaskChips();
     applyThemeColors();
     renderClockFaceDial();

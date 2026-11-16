@@ -1,5 +1,5 @@
 // Service Worker：Network-First 優先取得最新設定，離線時自動回退至快取（相容 GitHub Pages 子路徑）
-const CACHE_NAME = 'kids-timer-v5';
+const CACHE_NAME = 'kids-timer-v6';
 const ASSETS = [
   './',
   './index.html',
