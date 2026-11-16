@@ -664,6 +664,12 @@ html, body {
   text-align: left;
 }
 
+.lang-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
 .color-swatches {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

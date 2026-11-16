@@ -77,6 +77,182 @@
     }
   ];
 
+  // 多語系字典 (繁體中文 / English)
+  const I18N = {
+    'zh-TW': {
+      pageTitle: '兒童視覺化計時器 Kids Timer',
+      brandTitle: '兒童視覺化計時器',
+      brandSubtitle: '點選或轉動圓盤即可設定時間',
+      tickLabel: '滴答聲',
+      lockLabel: '兒童鎖',
+      lockHoldLabel: '長按解鎖',
+      settingsLabel: '設定',
+      fullscreenLabel: '全螢幕',
+      modeFastName: '藍色快鐘',
+      modeFastDesc: '最高 15 分鐘',
+      modeSlowName: '紅色慢鐘',
+      modeSlowDesc: '最高 60 分鐘',
+      modeCustomName: '自訂轉盤',
+      modeMaxDesc: '最高 {n} 分鐘',
+      minus1: '-1 分',
+      plus1: '+1 分',
+      plus5: '+5 分',
+      startTimer: '開始計時',
+      pauseTimer: '暫停計時',
+      resumeTimer: '繼續計時',
+      resetTimer: '重設',
+      statusRunning: '倒數計時進行中...',
+      statusZero: '請轉動圓盤設定時間',
+      statusIdle: '點擊「開始計時」或拖曳轉盤',
+      approxMin: '約 {n} 分鐘',
+      lockToast: '🔒 兒童鎖開啟中，長按右上角「鎖頭」1.2 秒即可解鎖',
+      addCustomTask: '自訂任務',
+      settingsTitle: '⚙️ 計時器設定與自訂',
+      labelLanguage: '🌐 介面語言',
+      langAuto: '跟隨系統',
+      labelCustomMax: '⏱️ 自訂轉盤最大時間（分鐘）',
+      helpCustomMax: '切換到「自訂轉盤」時，一整圈代表的總分鐘數：',
+      minUnit: '{n} 分',
+      labelManualMax: '或手動輸入（1 ~ 180 分鐘）：',
+      labelCustomColor: '🎨 自訂轉盤色塊顏色',
+      labelAlarmSound: '🔔 時間到提醒音效（點擊可試聽）',
+      soundXylophone: '🎵 歡樂木琴',
+      soundChime: '🔔 清脆鐘聲',
+      soundHarp: '✨ 溫柔豎琴',
+      soundBeep: '⏰ 經典鬧鈴',
+      labelDisplayPrefs: '🧭 顯示偏好',
+      labelShowDigital: '顯示數位倒數時間 (MM:SS)',
+      labelLastMinutePulse: '倒數最後 1 分鐘色塊閃爍提醒',
+      labelInstallGuide: '📲 手機安裝方式',
+      helpInstallGuide: '• <b>iPhone (Safari)</b>：點選下方「分享」按鈕 ➔「加入主畫面」<br/>• <b>Android (Chrome)</b>：點選右上角「⋮」選單 ➔「加到主畫面」➔「安裝」',
+      saveSettings: '儲存並套用',
+      customTaskTitle: '➕ 新增自訂任務',
+      labelChooseIcon: '選擇圖示',
+      labelTaskName: '任務名稱',
+      placeholderTaskName: '例如：練鋼琴、穿鞋子、收書包',
+      labelTaskDefaultMin: '預設倒數分鐘數',
+      addTaskBtn: '新增任務',
+      defaultCustomTaskName: '自訂任務',
+      alarmTitle: '時間到囉！',
+      alarmSubtitle: '「{name}」時間到囉！做得太棒了！',
+      dismissAlarm: '🎉 完成任務（關閉提醒）',
+      add2Min: '+2 分鐘（再一下下）',
+      colors: {
+        blue: '天空藍',
+        red: '活力紅',
+        green: '森林綠',
+        orange: '陽光橘',
+        purple: '夢幻紫',
+        pink: '蜜桃粉'
+      },
+      tasks: {
+        go_out: '出門',
+        toys: '收玩具時間',
+        brush: '刷牙洗臉',
+        read: '看書閱讀',
+        homework: '寫作業',
+        meal: '吃飯時間',
+        play: '遊戲時間',
+        bath: '洗澡時間',
+        sleep: '準備睡覺'
+      }
+    },
+    en: {
+      pageTitle: 'Kids Timer - Visual Countdown',
+      brandTitle: 'Kids Timer',
+      brandSubtitle: 'Tap or drag the dial to set time',
+      tickLabel: 'Tick',
+      lockLabel: 'Lock',
+      lockHoldLabel: 'Hold',
+      settingsLabel: 'Settings',
+      fullscreenLabel: 'Full',
+      modeFastName: 'Blue Clock',
+      modeFastDesc: 'Up to 15 min',
+      modeSlowName: 'Red Clock',
+      modeSlowDesc: 'Up to 60 min',
+      modeCustomName: 'Custom Clock',
+      modeMaxDesc: 'Up to {n} min',
+      minus1: '-1m',
+      plus1: '+1m',
+      plus5: '+5m',
+      startTimer: 'Start',
+      pauseTimer: 'Pause',
+      resumeTimer: 'Resume',
+      resetTimer: 'Reset',
+      statusRunning: 'Counting down...',
+      statusZero: 'Drag the dial to set time',
+      statusIdle: 'Tap Start or drag the dial',
+      approxMin: '~{n} min',
+      lockToast: '🔒 Child lock is on. Hold the lock button for 1.2s to unlock.',
+      addCustomTask: 'Add Task',
+      settingsTitle: '⚙️ Settings & Customize',
+      labelLanguage: '🌐 Language',
+      langAuto: 'Auto',
+      labelCustomMax: '⏱️ Custom Clock Max Time (min)',
+      helpCustomMax: 'Total minutes for one full circle in Custom mode:',
+      minUnit: '{n}m',
+      labelManualMax: 'Or enter (1 ~ 180 min):',
+      labelCustomColor: '🎨 Custom Clock Color',
+      labelAlarmSound: '🔔 Alarm Sound (Tap to preview)',
+      soundXylophone: '🎵 Xylophone',
+      soundChime: '🔔 Chime',
+      soundHarp: '✨ Harp',
+      soundBeep: '⏰ Classic Beep',
+      labelDisplayPrefs: '🧭 Display Preferences',
+      labelShowDigital: 'Show digital countdown (MM:SS)',
+      labelLastMinutePulse: 'Pulse sector in final 1 minute',
+      labelInstallGuide: '📲 Install on Mobile',
+      helpInstallGuide: '• <b>iPhone (Safari)</b>: Tap Share ➔ "Add to Home Screen"<br/>• <b>Android (Chrome)</b>: Tap "⋮" menu ➔ "Add to Home screen" ➔ "Install"',
+      saveSettings: 'Save & Apply',
+      customTaskTitle: '➕ New Custom Task',
+      labelChooseIcon: 'Choose Icon',
+      labelTaskName: 'Task Name',
+      placeholderTaskName: 'e.g., Piano, Put on shoes, Pack bag',
+      labelTaskDefaultMin: 'Default Minutes',
+      addTaskBtn: 'Add Task',
+      defaultCustomTaskName: 'Custom Task',
+      alarmTitle: "Time's Up!",
+      alarmSubtitle: '"{name}" is done! Great job!',
+      dismissAlarm: '🎉 Done (Stop Alarm)',
+      add2Min: '+2 Min (Just a bit more)',
+      colors: {
+        blue: 'Sky Blue',
+        red: 'Bright Red',
+        green: 'Forest Green',
+        orange: 'Sunny Orange',
+        purple: 'Dreamy Purple',
+        pink: 'Peach Pink'
+      },
+      tasks: {
+        go_out: 'Go Out',
+        toys: 'Clean Up Toys',
+        brush: 'Brush Teeth',
+        read: 'Reading',
+        homework: 'Homework',
+        meal: 'Mealtime',
+        play: 'Playtime',
+        bath: 'Bath Time',
+        sleep: 'Bedtime'
+      }
+    }
+  };
+
+  function detectBrowserLanguage() {
+    const locales = (navigator.languages && navigator.languages.length > 0)
+      ? navigator.languages
+      : [navigator.language || 'en'];
+    for (const loc of locales) {
+      const lower = String(loc).toLowerCase();
+      if (lower.startsWith('zh-tw') || lower.startsWith('zh-hk') || lower.startsWith('zh-mo') || lower.includes('hant')) {
+        return 'zh-TW';
+      }
+      if (lower.startsWith('en')) {
+        return 'en';
+      }
+    }
+    return 'en';
+  }
+
   // 預設兒童日常任務清單
   const DEFAULT_TASKS = [
     { id: 'go_out', emoji: '🚀', name: '出門', defaultMin: 15, mode: 'fast12' },
@@ -112,6 +288,7 @@
     lastWholeSecond: null,
 
     // 使用者偏好與設定
+    language: 'auto',          // 'auto' | 'zh-TW' | 'en'
     tickSoundEnabled: false,
     childLocked: false,
     showDigital: true,
@@ -126,12 +303,39 @@
     selectedNewEmoji: '🎹'
   };
 
+  function getActiveLang() {
+    if (state.language === 'zh-TW' || state.language === 'en') {
+      return state.language;
+    }
+    return detectBrowserLanguage();
+  }
+
+  function t(key, vars = {}) {
+    const lang = getActiveLang();
+    const dict = I18N[lang] || I18N.en;
+    let str = dict[key] !== undefined ? dict[key] : (I18N.en[key] || key);
+    Object.keys(vars).forEach((k) => {
+      str = str.replaceAll(`{${k}}`, String(vars[k]));
+    });
+    return str;
+  }
+
+  function getTaskDisplayName(task) {
+    if (!task) return '';
+    if (task.isCustom) return task.name;
+    const lang = getActiveLang();
+    return (I18N[lang] && I18N[lang].tasks && I18N[lang].tasks[task.id]) || task.name;
+  }
+
   // 讀取 localStorage 儲存的偏好設定
   function loadSavedSettings() {
     try {
       const raw = localStorage.getItem('kids_timer_settings_v1');
       if (!raw) return;
       const saved = JSON.parse(raw);
+      if (saved.language === 'auto' || saved.language === 'zh-TW' || saved.language === 'en') {
+        state.language = saved.language;
+      }
       if (saved.customMaxMinutes) state.customMaxMinutes = Number(saved.customMaxMinutes);
       if (saved.customColorId) state.customColorId = saved.customColorId;
       if (saved.alarmSound) state.alarmSound = saved.alarmSound;
@@ -174,6 +378,7 @@
       localStorage.setItem(
         'kids_timer_settings_v1',
         JSON.stringify({
+          language: state.language,
           customMaxMinutes: state.customMaxMinutes,
           customColorId: state.customColorId,
           alarmSound: state.alarmSound,
@@ -307,12 +512,19 @@
   // ==========================================================================
   const dom = {
     metaThemeColor: document.getElementById('meta-theme-color'),
+    brandTitle: document.getElementById('brand-title'),
+    brandSubtitle: document.getElementById('brand-subtitle'),
     taskList: document.getElementById('task-list'),
     activeTaskEmoji: document.getElementById('active-task-emoji'),
     activeTaskName: document.getElementById('active-task-name'),
     clockCenterEmoji: document.getElementById('clock-center-emoji'),
 
     modeTabs: document.querySelectorAll('.mode-tab'),
+    modeNameFast12: document.getElementById('mode-name-fast12'),
+    modeDescFast12: document.getElementById('mode-desc-fast12'),
+    modeNameSlow60: document.getElementById('mode-name-slow60'),
+    modeDescSlow60: document.getElementById('mode-desc-slow60'),
+    modeNameCustom: document.getElementById('mode-name-custom'),
     customModeDot: document.getElementById('custom-mode-dot'),
     customModeDesc: document.getElementById('custom-mode-desc'),
 
@@ -339,19 +551,41 @@
     startPauseIcon: document.getElementById('start-pause-icon'),
     startPauseText: document.getElementById('start-pause-text'),
     btnReset: document.getElementById('btn-reset'),
+    resetText: document.getElementById('reset-text'),
 
     btnTick: document.getElementById('btn-tick'),
     tickIcon: document.getElementById('tick-icon'),
+    tickLabel: document.getElementById('tick-label'),
     btnLock: document.getElementById('btn-lock'),
     lockIcon: document.getElementById('lock-icon'),
     lockLabel: document.getElementById('lock-label'),
     btnSettings: document.getElementById('btn-settings'),
+    settingsLabel: document.getElementById('settings-label'),
     btnFullscreen: document.getElementById('btn-fullscreen'),
+    fullscreenLabel: document.getElementById('fullscreen-label'),
 
     // 設定彈窗
     settingsModal: document.getElementById('settings-modal'),
+    settingsTitle: document.getElementById('settings-title'),
     btnCloseSettings: document.getElementById('btn-close-settings'),
     btnSaveSettings: document.getElementById('btn-save-settings'),
+    labelLanguage: document.getElementById('label-language'),
+    langOptions: document.getElementById('lang-options'),
+    langBtnAuto: document.getElementById('lang-btn-auto'),
+    labelCustomMax: document.getElementById('label-custom-max'),
+    helpCustomMax: document.getElementById('help-custom-max'),
+    labelManualMax: document.getElementById('label-manual-max'),
+    labelCustomColor: document.getElementById('label-custom-color'),
+    labelAlarmSound: document.getElementById('label-alarm-sound'),
+    soundBtnXylophone: document.getElementById('sound-btn-xylophone'),
+    soundBtnChime: document.getElementById('sound-btn-chime'),
+    soundBtnHarp: document.getElementById('sound-btn-harp'),
+    soundBtnBeep: document.getElementById('sound-btn-beep'),
+    labelDisplayPrefs: document.getElementById('label-display-prefs'),
+    labelShowDigital: document.getElementById('label-show-digital'),
+    labelLastMinutePulse: document.getElementById('label-last-minute-pulse'),
+    labelInstallGuide: document.getElementById('label-install-guide'),
+    helpInstallGuide: document.getElementById('help-install-guide'),
     customMaxPresets: document.getElementById('custom-max-presets'),
     inputCustomMax: document.getElementById('input-custom-max'),
     colorSwatches: document.getElementById('color-swatches'),
@@ -361,6 +595,10 @@
 
     // 自訂任務彈窗
     customTaskModal: document.getElementById('custom-task-modal'),
+    customTaskTitle: document.getElementById('custom-task-title'),
+    labelChooseIcon: document.getElementById('label-choose-icon'),
+    labelTaskName: document.getElementById('label-task-name'),
+    labelTaskDefaultMin: document.getElementById('label-task-default-min'),
     btnCloseCustomTask: document.getElementById('btn-close-custom-task'),
     emojiPicker: document.getElementById('emoji-picker'),
     inputTaskName: document.getElementById('input-task-name'),
@@ -370,9 +608,12 @@
     // 時間到彈窗
     alarmModal: document.getElementById('alarm-modal'),
     alarmEmoji: document.getElementById('alarm-emoji'),
+    alarmTitle: document.getElementById('alarm-title'),
     alarmSubtitle: document.getElementById('alarm-subtitle'),
     btnDismissAlarm: document.getElementById('btn-dismiss-alarm'),
+    dismissAlarmText: document.getElementById('dismiss-alarm-text'),
     btnAdd2Min: document.getElementById('btn-add-2min'),
+    add2MinText: document.getElementById('add-2min-text'),
 
     confettiCanvas: document.getElementById('confetti-canvas')
   };
@@ -438,7 +679,7 @@
     // 更新自訂模式按鈕上的小圓點與描述
     const customTheme = COLOR_THEMES.find((c) => c.id === state.customColorId) || COLOR_THEMES[2];
     dom.customModeDot.style.background = customTheme.primary;
-    dom.customModeDesc.textContent = `最高 ${state.customMaxMinutes} 分鐘`;
+    dom.customModeDesc.textContent = t('modeMaxDesc', { n: state.customMaxMinutes });
   }
 
   // 極座標轉笛卡兒座標（0 度在正上方 12 點鐘方向，順時針增加）
@@ -589,15 +830,15 @@
       dom.timeText.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     } else {
       dom.digitalDisplay.classList.add('hidden-digits');
-      dom.timeText.textContent = `約 ${Math.ceil(displaySec / 60)} 分鐘`;
+      dom.timeText.textContent = t('approxMin', { n: Math.ceil(displaySec / 60) });
     }
 
     if (state.isRunning) {
-      dom.digitalStatus.textContent = '倒數計時進行中...';
+      dom.digitalStatus.textContent = t('statusRunning');
     } else if (clampedRemaining <= 0) {
-      dom.digitalStatus.textContent = '請轉動圓盤設定時間';
+      dom.digitalStatus.textContent = t('statusZero');
     } else {
-      dom.digitalStatus.textContent = '點擊「開始計時」或拖曳轉盤';
+      dom.digitalStatus.textContent = t('statusIdle');
     }
   }
 
@@ -702,13 +943,13 @@
     if (state.isRunning) {
       dom.btnStartPause.classList.add('running');
       dom.startPauseIcon.textContent = '⏸';
-      dom.startPauseText.textContent = '暫停計時';
+      dom.startPauseText.textContent = t('pauseTimer');
     } else {
       dom.btnStartPause.classList.remove('running');
       dom.startPauseIcon.textContent = '▶';
       dom.startPauseText.textContent = state.remainingSeconds < state.totalSeconds && state.remainingSeconds > 0
-        ? '繼續計時'
-        : '開始計時';
+        ? t('resumeTimer')
+        : t('startTimer');
     }
   }
 
@@ -801,7 +1042,8 @@
     pauseTimer();
     const currentTask = state.tasks.find((t) => t.id === state.activeTaskId) || state.tasks[0];
     dom.alarmEmoji.textContent = currentTask ? currentTask.emoji : '🎉';
-    dom.alarmSubtitle.textContent = `「${currentTask ? currentTask.name : '計時任務'}」時間到囉！做得太棒了！`;
+    const taskName = currentTask ? getTaskDisplayName(currentTask) : t('defaultCustomTaskName');
+    dom.alarmSubtitle.textContent = t('alarmSubtitle', { name: taskName });
     dom.alarmModal.classList.remove('hidden');
 
     sound.startAlarmLoop();
@@ -870,8 +1112,8 @@
       btn.className = `task-chip ${task.id === state.activeTaskId ? 'active' : ''}`;
       btn.innerHTML = `
         <span class="task-emoji">${task.emoji}</span>
-        <span>${task.name}</span>
-        ${task.isCustom ? `<span class="delete-task" data-delete-id="${task.id}" title="刪除此任務">✕</span>` : ''}
+        <span>${getTaskDisplayName(task)}</span>
+        ${task.isCustom ? `<span class="delete-task" data-delete-id="${task.id}" title="Delete">✕</span>` : ''}
       `;
 
       // 防止手機長按跳出系統右鍵選單
@@ -1052,7 +1294,7 @@
     const addBtn = document.createElement('button');
     addBtn.type = 'button';
     addBtn.className = 'task-chip';
-    addBtn.innerHTML = `<span class="task-emoji">➕</span><span>自訂任務</span>`;
+    addBtn.innerHTML = `<span class="task-emoji">➕</span><span>${t('addCustomTask')}</span>`;
     addBtn.addEventListener('click', () => {
       if (state.childLocked) {
         showLockedToast();
@@ -1069,7 +1311,7 @@
     state.activeTaskId = task.id;
 
     dom.activeTaskEmoji.textContent = task.emoji;
-    dom.activeTaskName.textContent = task.name;
+    dom.activeTaskName.textContent = getTaskDisplayName(task);
     dom.clockCenterEmoji.textContent = task.emoji;
 
     renderTaskChips();
@@ -1153,28 +1395,105 @@
   }
 
   // ==========================================================================
-  // 11. 設定彈窗、自訂任務彈窗與兒童防誤觸鎖
+  // 11. 多語系介面套用、設定彈窗、自訂任務彈窗與兒童防誤觸鎖
   // ==========================================================================
-  function initSettingsModal() {
-    // 渲染色塊顏色選項
-    function renderSwatches() {
-      dom.colorSwatches.innerHTML = '';
-      COLOR_THEMES.forEach((theme) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `color-swatch-btn ${state.customColorId === theme.id ? 'active' : ''}`;
-        btn.innerHTML = `
-          <span class="swatch-circle" style="background:${theme.primary}"></span>
-          <span>${theme.name}</span>
-        `;
-        btn.addEventListener('click', () => {
-          state.customColorId = theme.id;
-          renderSwatches();
-        });
-        dom.colorSwatches.appendChild(btn);
+  function renderColorSwatches() {
+    const lang = getActiveLang();
+    const colorNames = (I18N[lang] && I18N[lang].colors) || I18N.en.colors;
+    dom.colorSwatches.innerHTML = '';
+    COLOR_THEMES.forEach((theme) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `color-swatch-btn ${state.customColorId === theme.id ? 'active' : ''}`;
+      btn.innerHTML = `
+        <span class="swatch-circle" style="background:${theme.primary}"></span>
+        <span>${colorNames[theme.id] || theme.name}</span>
+      `;
+      btn.addEventListener('click', () => {
+        state.customColorId = theme.id;
+        renderColorSwatches();
       });
-    }
+      dom.colorSwatches.appendChild(btn);
+    });
+  }
 
+  function applyLanguage() {
+    const lang = getActiveLang();
+    document.documentElement.lang = lang;
+    document.title = t('pageTitle');
+
+    dom.brandTitle.textContent = t('brandTitle');
+    dom.brandSubtitle.textContent = t('brandSubtitle');
+    dom.tickLabel.textContent = t('tickLabel');
+    dom.lockLabel.textContent = state.childLocked ? t('lockHoldLabel') : t('lockLabel');
+    dom.settingsLabel.textContent = t('settingsLabel');
+    dom.fullscreenLabel.textContent = t('fullscreenLabel');
+
+    dom.modeNameFast12.textContent = t('modeFastName');
+    dom.modeDescFast12.textContent = t('modeFastDesc');
+    dom.modeNameSlow60.textContent = t('modeSlowName');
+    dom.modeDescSlow60.textContent = t('modeSlowDesc');
+    dom.modeNameCustom.textContent = t('modeCustomName');
+    dom.customModeDesc.textContent = t('modeMaxDesc', { n: state.customMaxMinutes });
+
+    dom.btnMinus1.textContent = t('minus1');
+    dom.btnPlus1.textContent = t('plus1');
+    dom.btnPlus5.textContent = t('plus5');
+    dom.resetText.textContent = t('resetTimer');
+    dom.lockToast.textContent = t('lockToast');
+
+    // 設定彈窗
+    dom.settingsTitle.textContent = t('settingsTitle');
+    dom.labelLanguage.textContent = t('labelLanguage');
+    dom.langBtnAuto.textContent = t('langAuto');
+    dom.labelCustomMax.textContent = t('labelCustomMax');
+    dom.helpCustomMax.textContent = t('helpCustomMax');
+    dom.labelManualMax.textContent = t('labelManualMax');
+    dom.labelCustomColor.textContent = t('labelCustomColor');
+    dom.labelAlarmSound.textContent = t('labelAlarmSound');
+    dom.soundBtnXylophone.textContent = t('soundXylophone');
+    dom.soundBtnChime.textContent = t('soundChime');
+    dom.soundBtnHarp.textContent = t('soundHarp');
+    dom.soundBtnBeep.textContent = t('soundBeep');
+    dom.labelDisplayPrefs.textContent = t('labelDisplayPrefs');
+    dom.labelShowDigital.textContent = t('labelShowDigital');
+    dom.labelLastMinutePulse.textContent = t('labelLastMinutePulse');
+    dom.labelInstallGuide.textContent = t('labelInstallGuide');
+    dom.helpInstallGuide.innerHTML = t('helpInstallGuide');
+    dom.btnSaveSettings.textContent = t('saveSettings');
+
+    dom.customMaxPresets.querySelectorAll('.chip-btn').forEach((chip) => {
+      chip.textContent = t('minUnit', { n: chip.dataset.minutes });
+    });
+
+    dom.langOptions.querySelectorAll('.sound-btn').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.lang === state.language);
+    });
+
+    // 自訂任務彈窗與時間到彈窗
+    dom.customTaskTitle.textContent = t('customTaskTitle');
+    dom.labelChooseIcon.textContent = t('labelChooseIcon');
+    dom.labelTaskName.textContent = t('labelTaskName');
+    dom.inputTaskName.placeholder = t('placeholderTaskName');
+    dom.labelTaskDefaultMin.textContent = t('labelTaskDefaultMin');
+    dom.btnAddTask.textContent = t('addTaskBtn');
+
+    dom.alarmTitle.textContent = t('alarmTitle');
+    dom.dismissAlarmText.textContent = t('dismissAlarm');
+    dom.add2MinText.textContent = t('add2Min');
+
+    // 更新當前任務名稱與列表
+    const currentTask = state.tasks.find((item) => item.id === state.activeTaskId);
+    if (currentTask) {
+      dom.activeTaskName.textContent = getTaskDisplayName(currentTask);
+    }
+    renderTaskChips();
+    renderColorSwatches();
+    updateStartPauseButtonUI();
+    updateClockVisuals();
+  }
+
+  function initSettingsModal() {
     dom.btnSettings.addEventListener('click', () => {
       if (state.childLocked) {
         showLockedToast();
@@ -1183,7 +1502,11 @@
       dom.inputCustomMax.value = String(state.customMaxMinutes);
       dom.toggleShowDigital.checked = state.showDigital;
       dom.toggleLastMinutePulse.checked = state.lastMinutePulse;
-      renderSwatches();
+      renderColorSwatches();
+
+      dom.langOptions.querySelectorAll('.sound-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.lang === state.language);
+      });
 
       // 更新預設分鐘數膠囊選中狀態
       dom.customMaxPresets.querySelectorAll('.chip-btn').forEach((chip) => {
@@ -1196,6 +1519,15 @@
       });
 
       dom.settingsModal.classList.remove('hidden');
+    });
+
+    // 介面語言選擇並即時切換預覽
+    dom.langOptions.addEventListener('click', (e) => {
+      const btn = e.target.closest('.sound-btn');
+      if (!btn) return;
+      state.language = btn.dataset.lang;
+      applyLanguage();
+      saveSettings();
     });
 
     dom.btnCloseSettings.addEventListener('click', () => {
@@ -1266,7 +1598,7 @@
     });
 
     dom.btnAddTask.addEventListener('click', () => {
-      const name = dom.inputTaskName.value.trim() || '自訂任務';
+      const name = dom.inputTaskName.value.trim() || t('defaultCustomTaskName');
       const defaultMin = Math.max(1, Math.min(120, Number(dom.inputTaskDefaultMin.value) || 10));
       const newTask = {
         id: `custom_${Date.now()}`,
@@ -1290,7 +1622,7 @@
     function updateLockUI() {
       dom.btnLock.classList.toggle('locked', state.childLocked);
       dom.lockIcon.textContent = state.childLocked ? '🔒' : '🔓';
-      dom.lockLabel.textContent = state.childLocked ? '長按解鎖' : '兒童鎖';
+      dom.lockLabel.textContent = state.childLocked ? t('lockHoldLabel') : t('lockLabel');
     }
 
     dom.btnLock.addEventListener('pointerdown', (e) => {
@@ -1425,7 +1757,7 @@
     renderTaskChips();
     applyThemeColors();
     renderClockFaceDial();
-    updateClockVisuals();
+    applyLanguage();
     initDialDragEvents();
     initSettingsModal();
     initCustomTaskModal();
