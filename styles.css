@@ -715,6 +715,12 @@ html, body {
   color: var(--text-muted);
 }
 
+.author-name a {
+  color: var(--theme-primary);
+  text-decoration: underline;
+  font-weight: 800;
+}
+
 .color-swatches {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
