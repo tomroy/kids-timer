@@ -125,6 +125,8 @@
       labelLastMinutePulse: '倒數最後 1 分鐘色塊閃爍提醒',
       labelInstallGuide: '📲 手機安裝方式',
       helpInstallGuide: '• <b>iPhone (Safari)</b>：點選下方「分享」按鈕 ➔「加入主畫面」<br/>• <b>Android (Chrome)</b>：點選右上角「⋮」選單 ➔「加到主畫面」➔「安裝」',
+      labelAboutAuthor: '👨‍💻 關於作者',
+      textAuthorName: '由 Tom Lin (tomroy) 用心製作 ❤️',
       saveSettings: '儲存並套用',
       customTaskTitle: '➕ 新增自訂任務',
       labelChooseIcon: '選擇圖示',
@@ -203,6 +205,8 @@
       labelLastMinutePulse: 'Pulse sector in final 1 minute',
       labelInstallGuide: '📲 Install on Mobile',
       helpInstallGuide: '• <b>iPhone (Safari)</b>: Tap Share ➔ "Add to Home Screen"<br/>• <b>Android (Chrome)</b>: Tap "⋮" menu ➔ "Add to Home screen" ➔ "Install"',
+      labelAboutAuthor: '👨‍💻 About Author',
+      textAuthorName: 'Made with ❤️ by Tom Lin (tomroy)',
       saveSettings: 'Save & Apply',
       customTaskTitle: '➕ New Custom Task',
       labelChooseIcon: 'Choose Icon',
@@ -586,6 +590,8 @@
     labelLastMinutePulse: document.getElementById('label-last-minute-pulse'),
     labelInstallGuide: document.getElementById('label-install-guide'),
     helpInstallGuide: document.getElementById('help-install-guide'),
+    labelAboutAuthor: document.getElementById('label-about-author'),
+    textAuthorName: document.getElementById('text-author-name'),
     customMaxPresets: document.getElementById('custom-max-presets'),
     inputCustomMax: document.getElementById('input-custom-max'),
     colorSwatches: document.getElementById('color-swatches'),
@@ -1460,6 +1466,8 @@
     dom.labelLastMinutePulse.textContent = t('labelLastMinutePulse');
     dom.labelInstallGuide.textContent = t('labelInstallGuide');
     dom.helpInstallGuide.innerHTML = t('helpInstallGuide');
+    dom.labelAboutAuthor.textContent = t('labelAboutAuthor');
+    dom.textAuthorName.textContent = t('textAuthorName');
     dom.btnSaveSettings.textContent = t('saveSettings');
 
     dom.customMaxPresets.querySelectorAll('.chip-btn').forEach((chip) => {

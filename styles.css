@@ -670,6 +670,28 @@ html, body {
   gap: 8px;
 }
 
+.about-author-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  font-size: 0.85rem;
+}
+
+.author-badge {
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.author-name {
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
 .color-swatches {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
