@@ -521,7 +521,7 @@
     taskList: document.getElementById('task-list'),
     activeTaskEmoji: document.getElementById('active-task-emoji'),
     activeTaskName: document.getElementById('active-task-name'),
-    clockCenterEmoji: document.getElementById('clock-center-emoji'),
+    clockCenterTime: document.getElementById('clock-center-time'),
 
     modeTabs: document.querySelectorAll('.mode-tab'),
     modeNameFast12: document.getElementById('mode-name-fast12'),
@@ -827,16 +827,24 @@
       dom.timerSector.classList.remove('urgent-pulse');
     }
 
-    // 更新數位時間顯示
+    // 更新數位時間顯示（包含時鐘正中間與下方讀數列）
     const displaySec = Math.ceil(clampedRemaining);
     const mins = Math.floor(displaySec / 60);
     const secs = displaySec % 60;
     if (state.showDigital) {
+      const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
       dom.digitalDisplay.classList.remove('hidden-digits');
-      dom.timeText.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      dom.timeText.textContent = formatted;
+      dom.clockCenterTime.textContent = formatted;
+      dom.clockCenterTime.setAttribute('font-size', mins >= 100 ? '27' : '32');
+      dom.clockCenterTime.setAttribute('fill', '#0f172a');
     } else {
+      const approxText = t('approxMin', { n: Math.ceil(displaySec / 60) });
       dom.digitalDisplay.classList.add('hidden-digits');
-      dom.timeText.textContent = t('approxMin', { n: Math.ceil(displaySec / 60) });
+      dom.timeText.textContent = approxText;
+      dom.clockCenterTime.textContent = approxText;
+      dom.clockCenterTime.setAttribute('font-size', '18');
+      dom.clockCenterTime.setAttribute('fill', '#475569');
     }
 
     if (state.isRunning) {
@@ -1318,7 +1326,6 @@
 
     dom.activeTaskEmoji.textContent = task.emoji;
     dom.activeTaskName.textContent = getTaskDisplayName(task);
-    dom.clockCenterEmoji.textContent = task.emoji;
 
     renderTaskChips();
 
@@ -1746,7 +1753,6 @@
       state.activeTaskId = firstTask.id;
       dom.activeTaskEmoji.textContent = firstTask.emoji;
       dom.activeTaskName.textContent = firstTask.name;
-      dom.clockCenterEmoji.textContent = firstTask.emoji;
       state.totalSeconds = firstTask.defaultMin * 60;
       state.remainingSeconds = state.totalSeconds;
       if (firstTask.defaultMin <= 15) {

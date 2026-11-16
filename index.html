@@ -12,7 +12,7 @@
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  <link rel="stylesheet" href="styles.css?v=14" />
+  <link rel="stylesheet" href="styles.css?v=15" />
 </head>
 <body>
   <!-- 慶祝彩帶畫布 -->
@@ -129,9 +129,9 @@
             <circle id="timer-handle-dot" cx="250" cy="82" r="5" fill="#2563eb" />
           </g>
 
-          <!-- 中心軸蓋 -->
-          <circle cx="250" cy="250" r="32" fill="#ffffff" stroke="#1e293b" stroke-width="7" filter="url(#handle-shadow)" />
-          <text id="clock-center-emoji" x="250" y="252" text-anchor="middle" dominant-baseline="central" font-size="28">🚀</text>
+          <!-- 中心軸蓋（顯示倒數計時時間） -->
+          <circle cx="250" cy="250" r="58" fill="#ffffff" stroke="#1e293b" stroke-width="6" filter="url(#handle-shadow)" />
+          <text id="clock-center-time" x="250" y="252" text-anchor="middle" dominant-baseline="central" fill="#0f172a" font-size="32" font-weight="900" style="font-variant-numeric: tabular-nums;">15:00</text>
         </svg>
 
         <!-- 兒童鎖定進度提示 -->
@@ -304,6 +304,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=14"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>
