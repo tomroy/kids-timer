@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#2563eb" id="meta-theme-color" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Kids Timer" />
+  <title>兒童視覺化計時器 Kids Timer</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 慶祝彩帶畫布 -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <div class="app-container">
+    <!-- 頂部導覽與工具列 -->
+    <header class="app-header">
+      <div class="brand">
+        <img src="icon.svg" alt="Kids Timer 圖示" class="brand-icon" />
+        <div>
+          <h1 class="brand-title">兒童視覺化計時器</h1>
+          <p class="brand-subtitle">點選或轉動圓盤即可設定時間</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button id="btn-tick" class="icon-btn" title="切換滴答聲" aria-label="切換滴答聲">
+          <span class="icon" id="tick-icon">🔇</span>
+          <span class="btn-label">滴答聲</span>
+        </button>
+        <button id="btn-lock" class="icon-btn" title="兒童防誤觸鎖定（鎖定後需長按 1.5 秒解鎖）" aria-label="兒童防誤觸鎖定">
+          <span class="icon" id="lock-icon">🔓</span>
+          <span class="btn-label" id="lock-label">未鎖定</span>
+        </button>
+        <button id="btn-settings" class="icon-btn" title="自訂顏色、時間與音效" aria-label="開啟設定">
+          <span class="icon">⚙️</span>
+          <span class="btn-label">設定</span>
+        </button>
+        <button id="btn-fullscreen" class="icon-btn" title="全螢幕模式" aria-label="切換全螢幕">
+          <span class="icon">⛶</span>
+          <span class="btn-label">全螢幕</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 任務標籤選擇列 -->
+    <section class="task-section" aria-label="選擇當前任務">
+      <div class="task-list" id="task-list">
+        <!-- 由 JavaScript 動態渲染任務按鈕 -->
+      </div>
+    </section>
+
+    <!-- 時鐘模式切換列（經典藍色 12 分鐘、紅色 60 分鐘、自訂模式） -->
+    <section class="mode-switcher" role="tablist" aria-label="時鐘模式選擇">
+      <button class="mode-tab active" data-mode="fast12" role="tab" aria-selected="true">
+        <span class="mode-dot dot-blue"></span>
+        <div class="mode-info">
+          <span class="mode-name">藍色快鐘</span>
+          <span class="mode-desc">最高 15 分鐘</span>
+        </div>
+      </button>
+      <button class="mode-tab" data-mode="slow60" role="tab" aria-selected="false">
+        <span class="mode-dot dot-red"></span>
+        <div class="mode-info">
+          <span class="mode-name">紅色慢鐘</span>
+          <span class="mode-desc">最高 60 分鐘</span>
+        </div>
+      </button>
+      <button class="mode-tab" data-mode="custom" role="tab" aria-selected="false">
+        <span class="mode-dot dot-custom" id="custom-mode-dot"></span>
+        <div class="mode-info">
+          <span class="mode-name">自訂轉盤</span>
+          <span class="mode-desc" id="custom-mode-desc">最高 30 分鐘</span>
+        </div>
+      </button>
+    </section>
+
+    <!-- 主要計時轉盤區 -->
+    <main class="clock-stage">
+      <!-- 當前任務標題卡片 -->
+      <div class="active-task-banner" id="active-task-banner">
+        <span class="active-task-emoji" id="active-task-emoji">🧸</span>
+        <span class="active-task-name" id="active-task-name">收玩具時間</span>
+      </div>
+
+      <!-- 互動式 SVG 視覺化計時錶盤 -->
+      <div class="clock-wrapper" id="clock-wrapper">
+        <svg id="timer-svg" viewBox="0 0 500 500" aria-label="視覺化倒數計時器錶盤">
+          <defs>
+            <filter id="plate-shadow" x="-12%" y="-12%" width="124%" height="124%">
+              <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.14" />
+            </filter>
+            <filter id="handle-shadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.3" />
+            </filter>
+            <radialGradient id="face-grad" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="100%" stop-color="#f8fafc" />
+            </radialGradient>
+          </defs>
+
+          <!-- 外框錶殼 -->
+          <circle id="clock-outer-rim" cx="250" cy="250" r="236" fill="#ffffff" stroke="#1e293b" stroke-width="10" filter="url(#plate-shadow)" />
+          <!-- 內盤底面 -->
+          <circle cx="250" cy="250" r="222" fill="url(#face-grad)" />
+          <!-- 剩餘時間背景淡色軌道 -->
+          <circle id="clock-track-bg" cx="250" cy="250" r="168" fill="#eff6ff" opacity="0.55" />
+
+          <!-- 動態倒數色塊扇形 (Wedge) -->
+          <path id="timer-sector" d="" fill="#2563eb" />
+
+          <!-- 刻度線與數字群組（由 JS 根據最大分鐘數動態生成） -->
+          <g id="clock-ticks"></g>
+          <g id="clock-numbers"></g>
+
+          <!-- 指針與可拖曳握把 -->
+          <g id="timer-hand-group">
+            <line id="timer-hand-line" x1="250" y1="250" x2="250" y2="82" stroke="#1e293b" stroke-width="5" stroke-linecap="round" />
+            <circle id="timer-handle" cx="250" cy="82" r="18" fill="#ffffff" stroke="#2563eb" stroke-width="6" filter="url(#handle-shadow)" />
+            <circle id="timer-handle-dot" cx="250" cy="82" r="5" fill="#2563eb" />
+          </g>
+
+          <!-- 中心軸蓋 -->
+          <circle cx="250" cy="250" r="32" fill="#ffffff" stroke="#1e293b" stroke-width="7" filter="url(#handle-shadow)" />
+          <text id="clock-center-emoji" x="250" y="252" text-anchor="middle" dominant-baseline="central" font-size="28">🧸</text>
+        </svg>
+
+        <!-- 兒童鎖定進度提示 -->
+        <div class="lock-toast hidden" id="lock-toast">
+          🔒 兒童鎖開啟中，長按右上角「鎖頭」1.5 秒即可解鎖
+        </div>
+      </div>
+
+      <!-- 數位時間與快速微調列 -->
+      <div class="time-readout-bar">
+        <button class="quick-adjust-btn" id="btn-minus-1" aria-label="減少 1 分鐘">-1 分</button>
+        <div class="digital-display" id="digital-display" title="點擊切換顯示/隱藏數位秒數">
+          <span id="time-text">05:00</span>
+          <span class="digital-hint" id="digital-status">拖曳轉盤設定時間</span>
+        </div>
+        <button class="quick-adjust-btn" id="btn-plus-1" aria-label="增加 1 分鐘">+1 分</button>
+        <button class="quick-adjust-btn" id="btn-plus-5" aria-label="增加 5 分鐘">+5 分</button>
+      </div>
+
+      <!-- 主控制按鈕（開始 / 暫停 / 重設） -->
+      <div class="control-actions">
+        <button id="btn-start-pause" class="primary-action-btn">
+          <span class="btn-icon" id="start-pause-icon">▶</span>
+          <span id="start-pause-text">開始計時</span>
+        </button>
+        <button id="btn-reset" class="secondary-action-btn" title="重設回上次設定的時間">
+          <span>↺</span>
+          <span>重設</span>
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <!-- 設定與自訂彈窗 (Modal) -->
+  <div class="modal-backdrop hidden" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="settings-title">⚙️ 計時器設定與自訂</h2>
+        <button class="close-btn" id="btn-close-settings" aria-label="關閉設定">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 自訂模式：最大時間長度 -->
+        <div class="setting-group">
+          <label class="setting-label">⏱️ 自訂轉盤最大時間（分鐘）</label>
+          <p class="setting-help">切換到「自訂轉盤」時，一整圈代表的總分鐘數：</p>
+          <div class="preset-chips" id="custom-max-presets">
+            <button type="button" class="chip-btn" data-minutes="5">5 分</button>
+            <button type="button" class="chip-btn" data-minutes="10">10 分</button>
+            <button type="button" class="chip-btn" data-minutes="15">15 分</button>
+            <button type="button" class="chip-btn" data-minutes="20">20 分</button>
+            <button type="button" class="chip-btn active" data-minutes="30">30 分</button>
+            <button type="button" class="chip-btn" data-minutes="45">45 分</button>
+            <button type="button" class="chip-btn" data-minutes="90">90 分</button>
+            <button type="button" class="chip-btn" data-minutes="120">120 分</button>
+          </div>
+          <div class="custom-number-row">
+            <span>或手動輸入（1 ~ 180 分鐘）：</span>
+            <input type="number" id="input-custom-max" min="1" max="180" value="30" />
+          </div>
+        </div>
+
+        <!-- 自訂模式：色塊顏色選擇 -->
+        <div class="setting-group">
+          <label class="setting-label">🎨 自訂轉盤色塊顏色</label>
+          <div class="color-swatches" id="color-swatches">
+            <!-- 由 JS 渲染顏色選項 -->
+          </div>
+        </div>
+
+        <!-- 時間到提醒音效選擇 -->
+        <div class="setting-group">
+          <label class="setting-label">🔔 時間到提醒音效（點擊可試聽）</label>
+          <div class="sound-options" id="sound-options">
+            <button type="button" class="sound-btn active" data-sound="xylophone">🎵 歡樂木琴</button>
+            <button type="button" class="sound-btn" data-sound="chime">🔔 清脆鐘聲</button>
+            <button type="button" class="sound-btn" data-sound=" harp">✨ 溫柔豎琴</button>
+            <button type="button" class="sound-btn" data-sound="beep">⏰ 經典鬧鈴</button>
+          </div>
+        </div>
+
+        <!-- 倒數方向與顯示設定 -->
+        <div class="setting-group">
+          <label class="setting-label">🧭 顯示偏好</label>
+          <label class="toggle-row">
+            <span>顯示數位倒數時間 (MM:SS)</span>
+            <input type="checkbox" id="toggle-show-digital" checked />
+          </label>
+          <label class="toggle-row">
+            <span>倒數最後 1 分鐘色塊閃爍提醒</span>
+            <input type="checkbox" id="toggle-last-minute-pulse" checked />
+          </label>
+        </div>
+
+        <!-- 手機安裝提示與 APK 下載 -->
+        <div class="setting-group">
+          <label class="setting-label">📲 手機安裝方式</label>
+          <p class="setting-help">
+            • <b>iPhone (Safari)</b>：點選下方「分享」按鈕 ➔「加入主畫面」<br/>
+            • <b>Android (Pixel)</b>：可直接點下方按鈕下載原生 APK 安裝檔：
+          </p>
+          <a href="./KidsTimer.apk" download="KidsTimer.apk" class="secondary-action-btn" style="text-decoration:none; font-size:0.9rem; padding:10px 14px;">
+            📦 下載 Android 安裝檔 (KidsTimer.apk)
+          </a>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="primary-action-btn full-width" id="btn-save-settings">儲存並套用</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增自訂任務彈窗 -->
+  <div class="modal-backdrop hidden" id="custom-task-modal" role="dialog" aria-modal="true" aria-labelledby="custom-task-title">
+    <div class="modal-card modal-small">
+      <div class="modal-header">
+        <h2 id="custom-task-title">➕ 新增自訂任務</h2>
+        <button class="close-btn" id="btn-close-custom-task" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-group">
+          <label class="setting-label">選擇圖示</label>
+          <div class="emoji-picker" id="emoji-picker">
+            <!-- JS 動態生成常用兒童任務 Emoji -->
+          </div>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label" for="input-task-name">任務名稱</label>
+          <input type="text" id="input-task-name" class="text-input" placeholder="例如：練鋼琴、穿鞋子、收書包" maxlength="12" />
+        </div>
+        <div class="setting-group">
+          <label class="setting-label" for="input-task-default-min">預設倒數分鐘數</label>
+          <input type="number" id="input-task-default-min" class="text-input" min="1" max="120" value="10" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="primary-action-btn full-width" id="btn-add-task">新增任務</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 時間到慶祝畫面 (Alarm Overlay) -->
+  <div class="modal-backdrop alarm-overlay hidden" id="alarm-modal" role="alertdialog" aria-modal="true" aria-labelledby="alarm-title">
+    <div class="alarm-card">
+      <div class="alarm-emoji-bounce" id="alarm-emoji">🎉</div>
+      <h2 class="alarm-title" id="alarm-title">時間到囉！</h2>
+      <p class="alarm-subtitle" id="alarm-subtitle">「收玩具時間」完成！你做得太棒了！</p>
+      <div class="alarm-actions">
+        <button class="primary-action-btn alarm-stop-btn" id="btn-dismiss-alarm">
+          <span>🎉 完成任務（關閉提醒）</span>
+        </button>
+        <button class="secondary-action-btn" id="btn-add-2min">
+          <span>+2 分鐘（再一下下）</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
