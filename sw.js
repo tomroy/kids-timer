@@ -1,10 +1,10 @@
 // Service Worker：Network-First (bypass HTTP cache) 優先取得最新設定，離線時自動回退至快取
-const CACHE_NAME = 'kids-timer-v17';
+const CACHE_NAME = 'kids-timer-v18';
 const ASSETS = [
   './',
   './index.html',
-  './styles.css?v=17',
-  './app.js?v=17',
+  './styles.css?v=18',
+  './app.js?v=18',
   './manifest.json',
   './icon.svg',
   './icon-192.png',
